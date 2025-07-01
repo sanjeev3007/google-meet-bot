@@ -1,4 +1,3 @@
-
 # Google Meet Bot
 
 A bot that automatically joins Google Meet calls, records audio, transcribes conversations, and leaves when no participants are present.
@@ -14,10 +13,46 @@ A bot that automatically joins Google Meet calls, records audio, transcribes con
 
 ## Prerequisites
 
-### 1. Install FFmpeg
-1. Download FFmpeg from [here](https://github.com/GyanD/codexffmpeg/releases/download/6.0/ffmpeg-6.0-essentials_build.zip)
-2. Extract and copy to `C:\Program Files\ffmpeg\bin`
-3. Add to PATH: `C:\Program Files\ffmpeg\bin`
+### 1. FFmpeg Installation
+
+#### Windows
+1. Download FFmpeg:
+   - Visit [FFmpeg Builds](https://github.com/GyanD/codexffmpeg/releases)
+   - Download latest `ffmpeg-*-essentials_build.zip`
+   - OR use direct link to [FFmpeg 6.0](https://github.com/GyanD/codexffmpeg/releases/download/6.0/ffmpeg-6.0-essentials_build.zip)
+
+2. Install:
+   ```powershell
+   # Create FFmpeg directory
+   mkdir "C:\Program Files\ffmpeg\bin"
+
+   # Extract downloaded zip
+   # Copy ffmpeg.exe, ffprobe.exe, and ffplay.exe to bin directory
+
+   # Add to PATH
+   [Environment]::SetEnvironmentVariable(
+       "Path",
+       [Environment]::GetEnvironmentVariable("Path", "Machine") + ";C:\Program Files\ffmpeg\bin",
+       "Machine"
+   )
+   ```
+
+#### Linux
+```bash
+# Ubuntu/Debian
+sudo apt update && sudo apt install ffmpeg
+
+# CentOS/RHEL
+sudo yum install ffmpeg ffmpeg-devel
+
+# macOS
+brew install ffmpeg
+```
+
+#### Verify Installation
+```bash
+ffmpeg -version
+```
 
 ### 2. Install Virtual Audio Cable
 1. Download from [VB-Audio](https://vb-audio.com/Cable/)
