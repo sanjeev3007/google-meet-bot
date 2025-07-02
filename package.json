@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "bot:start": "cross-env NODE_ENV=development tsx src/bot/scheduler.ts"
-  },
+ "scripts": {
+  "start": "cross-env NODE_ENV=production tsx src/bot/scheduler.ts",
+  "dev": "next dev",
+  "build": "next build",
+  "lint": "next lint",
+  "bot:start": "cross-env NODE_ENV=development tsx src/bot/scheduler.ts"
+},
+
   "dependencies": {
     "@supabase/supabase-js": "^2.50.0",
     "@types/fluent-ffmpeg": "^2.1.27",
