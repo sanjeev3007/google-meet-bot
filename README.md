@@ -1,255 +1,180 @@
-# Google Meet Bot
+# Google Meet Bot 🤖
 
-A bot that automatically joins Google Meet calls, records audio, transcribes conversations, and leaves when no participants are present.
+An automated bot that joins Google Meet calls, records audio, transcribes conversations, and intelligently manages meeting participation. Built with modern TypeScript and Next.js.
 
-## Features
+## 🌟 Features
 
-- 🤖 Automated meeting attendance
-- 🎙️ Audio recording in segments
-- 🔄 Auto-leave after 5 minutes of no participants
-- 📝 Speech-to-text transcription
-- 💾 Transcript storage in Supabase
-- ⏰ Scheduled meeting joins
+- 🎯 **Automated Meeting Management**
+  - Auto-join scheduled meetings
+  - Smart participant detection
+  - Auto-leave when no participants present (5-minute timeout)
+  
+- 🎙️ **Advanced Audio Handling**
+  - High-quality audio recording
+  - Segmented recording for better management
+  - Virtual audio cable integration
+  
+- 🤖 **AI-Powered Transcription**
+  - Real-time speech-to-text conversion
+  - OpenAI integration for accurate transcription
+  - Structured transcript storage
+  
+- 💾 **Cloud Storage & Database**
+  - Supabase integration for secure storage
+  - Efficient audio file management
+  - Structured transcript database
 
-## Prerequisites
+## 🔧 Tech Stack
 
-### 1. FFmpeg Installation
+- **Core Technologies**
+  - TypeScript 5.x
+  - Node.js 18+
+  - Next.js 15.x
+  
+- **Automation & Browser Control**
+  - Puppeteer 24.x
+  - node-cron 4.x
+  
+- **Audio Processing**
+  - FFmpeg
+  - fluent-ffmpeg
+  - Virtual Audio Cable
+  
+- **Cloud Services**
+  - OpenAI API (for transcription)
+  - Supabase (storage & database)
+  
+- **Development Tools**
+  - tsx (TypeScript execution)
+  - cross-env (environment management)
+  - dotenv (configuration)
 
-#### Windows
-1. Download FFmpeg:
-   - Visit [FFmpeg Builds](https://github.com/GyanD/codexffmpeg/releases)
-   - Download latest `ffmpeg-*-essentials_build.zip`
-   - OR use direct link to [FFmpeg 6.0](https://github.com/GyanD/codexffmpeg/releases/download/6.0/ffmpeg-6.0-essentials_build.zip)
+## 📋 Prerequisites
 
-2. Install:
-   ```powershell
-   # Create FFmpeg directory
-   mkdir "C:\Program Files\ffmpeg\bin"
+### 2. Required Software
 
-   # Extract downloaded zip
-   # Copy ffmpeg.exe, ffprobe.exe, and ffplay.exe to bin directory
+#### FFmpeg Installation
 
-   # Add to PATH
-   [Environment]::SetEnvironmentVariable(
-       "Path",
-       [Environment]::GetEnvironmentVariable("Path", "Machine") + ";C:\Program Files\ffmpeg\bin",
-       "Machine"
-   )
-   ```
+**Windows:**
+```powershell
+# Using Chocolatey
+choco install ffmpeg
 
-#### Linux
-```bash
-# Ubuntu/Debian
-sudo apt update && sudo apt install ffmpeg
-
-# CentOS/RHEL
-sudo yum install ffmpeg ffmpeg-devel
-
-# macOS
-brew install ffmpeg
+# OR Manual Installation
+1. Download from https://github.com/GyanD/codexffmpeg/releases
+2. Extract to C:\Program Files\ffmpeg
+3. Add to PATH: C:\Program Files\ffmpeg\bin
 ```
 
-#### Verify Installation
-```bash
-ffmpeg -version
-```
-
-### 2. Install Virtual Audio Cable
+#### Virtual Audio Cable
 1. Download from [VB-Audio](https://vb-audio.com/Cable/)
-2. Install and restart computer
-3. Configure Windows audio settings for CABLE Input/Output
+2. Install and restart your system
+3. Set as default recording device
 
-## Setup
+## 📁 Project Structure
 
-### 1. Install Dependencies
+```
+google-meet-bot/
+├── src/
+│   ├── app/              # Next.js application
+│   │   ├── globals.css   # Global styles
+│   │   ├── layout.tsx    # Root layout
+│   │   └── page.tsx      # Home page
+│   ├── bot/             # Bot core functionality
+│   │   ├── controller.ts    # Main bot controller
+│   │   ├── joinMeet.ts     # Meeting join logic
+│   │   ├── meetingSession.ts # Session management
+│   │   ├── recordAudio.ts   # Audio recording
+│   │   ├── transcribe.ts    # Speech to text
+│   │   ├── saveTranscript.ts # Save transcriptions
+│   │   ├── scheduler.ts     # Meeting scheduler / run file /start bot by this file
+│   │   └── config.ts        # Bot configuration
+│   └── lib/             # Shared utilities
+│       └── supabase.ts  # Database client
+├── public/             # Static assets
+├── temp/              # Temporary audio files
+└── package.json       # Dependencies and scripts
+```
+
+## 🚀 Quick Start
+
+### 1. Prerequisites
+
+- FFmpeg installed on your system
+- Virtual Audio Cable installed
+- Node.js 18 or higher
+- Edge browser installed
+
+### 2. Installation
+
 ```bash
+# Clone the repository
+git clone https://github.com/sanjeev3007/google-meet-bot.git
+cd google-meet-bot
+
+# Install dependencies
 npm install
-```
 
-### 2. Create Environment File
-Create `.env.local`:
-```env
-GOOGLE_MEET_LINK=your_meet_link
-GOOGLE_EMAIL=your_email
-GOOGLE_PASSWORD=your_password
-SCHEDULE_TIME=55 18 * * *  # Cron format
-EDGE_PATH=C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
-FFMPEG_PATH=C:\Program Files\ffmpeg\bin\ffmpeg.exe
-AUDIO_DEVICE=audio=CABLE Output
-OPENAI_API_KEY=your_openai_key
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
-
-### 3. Storage Setup
-
-#### Local Development
-```bash
 # Create temp directories
 mkdir -p temp/audio
 ```
 
-#### Production Storage Options
+### 3. Configuration
 
-1. **Local Storage** (Default)
-   - Uses `temp/audio` directory
-   - Automatic cleanup after processing
-   - Files named: `recording-YYYY-MM-DDTHH-mm-ss-SSSZ.wav`
-   - Pros: Simple, no configuration needed
-   - Cons: Limited by disk space, no redundancy
+Create `.env.local` in the root directory:
 
-2. **Cloud Storage** (Recommended for Production)
-   - Use Supabase Storage bucket
-   - Set in environment:
-     ```bash
-     STORAGE_TYPE=cloud
-     ```
-   - Pros: Scalable, redundant, managed cleanup
-   - Cons: Additional cost
+```env
+# Required: Google Meet Configuration
+GOOGLE_MEET_LINK=https://meet.google.com/xxx-yyyy-zzz
+GOOGLE_EMAIL=your.email@gmail.com
+GOOGLE_PASSWORD=your_password
 
-3. **Mounted Volume** (Alternative)
-   - Mount dedicated volume:
-     ```bash
-     # Linux
-     export AUDIO_OUTPUT_PATH=/mnt/audio_volume/temp
-     
-     # Windows
-     set AUDIO_OUTPUT_PATH=D:\audio_storage\temp
-     ```
-   - Pros: Separate from system disk, manageable space
-   - Cons: Requires volume setup
+# Required: API Keys
+OPENAI_API_KEY=your_openai_api_key
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 
-### 4. Supabase Setup
+# Optional: Scheduling (Default: 6:58 PM daily)
+SCHEDULE_TIME=58 18 * * *
 
-1. Create Storage Bucket:
-   - Name: "audio"
-   - Public/Private as needed
-
-2. Create Database Table:
-```sql
-create table meeting_transcripts (
-  id uuid default uuid_generate_v4() primary key,
-  date date not null,
-  time time not null,
-  meet_link text not null,
-  transcript text not null,
-  status text not null,
-  created_at timestamp with time zone default timezone('utc'::text, now())
-);
+# Optional: Paths (defaults shown)
+EDGE_PATH=C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe
+FFMPEG_PATH=C:\\Program Files\\ffmpeg\\bin\\ffmpeg.exe
+AUDIO_DEVICE=audio=CABLE Output
 ```
 
-## Storage Management
+## 🏃‍♂️ Running the Bot
 
-### Automatic Cleanup
-- Files are deleted after:
-  - Successful transcription
-  - Bot shutdown
-  - Processing errors
-
-### Manual Cleanup
-```bash
-# Windows
-del /Q temp\audio\*
-
-# Linux
-rm -f temp/audio/*
-```
-
-### Production Maintenance
-1. Setup disk monitoring
-2. Configure cleanup schedule:
-   ```bash
-   # Add to crontab (Linux)
-   0 * * * * find /path/to/temp/audio -type f -mtime +1 -delete
-
-   # Windows Task Scheduler
-   forfiles /p "D:\path\to\temp\audio" /s /m *.* /d -1 /c "cmd /c del @path"
-   ```
-
-## Running the Bot
-
-### Development
+### Development Mode
 ```bash
 npm run bot:start
 ```
 
-### Production
+### Using Docker
 ```bash
-# Using PM2 (recommended)
-npm install -g pm2
-pm2 start npm --name "meet-bot" -- run bot:start
+# Build the image
+docker build -t google-meet-bot .
 
-# Or using system service
-# Create systemd service (Linux) or Windows Service
+# Run the container
+docker run -d \
+  --name meet-bot \
+  --restart unless-stopped \
+  -v $(pwd)/temp:/app/temp \
+  --env-file .env.local \
+  google-meet-bot
 ```
 
-## Troubleshooting
+## 📝 Key Files
 
-### Storage Issues
-1. Check space:
-   ```bash
-   df -h temp/audio  # Linux
-   dir temp\audio    # Windows
-   ```
+- `src/bot/controller.ts`: Main bot logic and meeting management
+- `src/bot/joinMeet.ts`: Handles meeting joining and browser automation
+- `src/bot/recordAudio.ts`: Audio recording functionality
+- `src/bot/transcribe.ts`: Speech-to-text conversion using OpenAI
+- `src/bot/scheduler.ts`: Meeting scheduling and cron jobs
 
-2. Verify permissions:
-   ```bash
-   # Linux
-   ls -la temp/audio
-   chmod 755 temp/audio
+## 🔧 Available Scripts
 
-   # Windows
-   icacls temp\audio
-   ```
-
-3. Check file cleanup:
-   - Monitor `temp/audio` directory
-   - Verify file deletion after processing
-   - Check Supabase storage quota
-
-### Common Issues
-- FFmpeg not found: Check PATH
-- Audio not recording: Test CABLE setup
-- Files not cleaning up: Check permissions
-- Disk space full: Implement monitoring
-
-## Monitoring
-
-1. Storage Monitoring:
-   ```bash
-   # Add to monitoring script
-   AUDIO_DIR="temp/audio"
-   THRESHOLD=90  # 90% full
-
-   USAGE=$(df -h $AUDIO_DIR | awk 'NR==2 {print $5}' | sed 's/%//')
-   if [ $USAGE -gt $THRESHOLD ]; then
-       echo "Warning: Storage usage above ${THRESHOLD}%"
-   fi
-   ```
-
-2. File Count Alert:
-   ```bash
-   # Check file accumulation
-   FILE_COUNT=$(ls -1 temp/audio | wc -l)
-   if [ $FILE_COUNT -gt 1000 ]; then
-       echo "Warning: Too many files in temp/audio"
-   fi
-   ```
-
-## Best Practices
-
-1. Regular Maintenance:
-   - Monitor disk space
-   - Check log files
-   - Verify file cleanup
-   - Test audio recording
-
-2. Backup Strategy:
-   - Database backups
-   - Configuration backups
-   - Log archival
-
-3. Security:
-   - Secure file permissions
-   - Regular security updates
-   - Monitor access logs
+- `npm run bot:start`: Start the bot in development mode
+- `npm start`: Start the bot in production mode
+- `npm run dev`: Start Next.js development server
+- `npm run build`: Build the Next.js application
