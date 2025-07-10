@@ -15,10 +15,11 @@ async function setupCronJob() {
             throw new Error('No deployment URL found. Set NEXT_PUBLIC_APP_URL for local development or deploy to Vercel.');
         }
 
-        // Ensure the URL is using HTTPS (required by Supabase)
-        const webhookUrl = appUrl.startsWith('http') 
-            ? `${appUrl}/api/cron`
-            : `https://${appUrl}/api/cron`;
+        // Ensure the URL is using HTTPS and remove any trailing slashes
+        const baseUrl = appUrl.startsWith('http') 
+            ? appUrl.replace(/\/+$/, '')
+            : `https://${appUrl.replace(/\/+$/, '')}`;
+        const webhookUrl = `${baseUrl}/api/cron`;
 
         console.log('Setting up cron job with parameters:', {
             jobName,
