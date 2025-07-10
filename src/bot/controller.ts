@@ -295,4 +295,16 @@ export class BotController {
             process.exit(1);
         }
     }
+}
+
+export async function startBot() {
+    try {
+        console.log('🤖 Starting Google Meet Bot...');
+        const bot = new BotController();
+        await bot.start();
+        return bot;
+    } catch (error) {
+        console.error('❌ Error starting bot:', error);
+        throw error;
+    }
 } 

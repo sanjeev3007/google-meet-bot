@@ -1,16 +1,36 @@
-import cron from 'node-cron';
-import { BotController } from './controller.js';
-import { config } from './config.js';
+import { BotController } from './controller';
+import { config } from './config';
+import dotenv from 'dotenv';
 
-// Create a new instance of the bot controller
-const botController = new BotController();
+// Load environment variables
+dotenv.config({ path: '.env.local' });
 
-// Schedule the bot to run at the specified time
-cron.schedule(config.scheduleTime, async () => {
+// Function to handle cron job execution
+export async function handleCronJob() {
     console.log('Starting scheduled bot run...');
     try {
+        // Validate required environment variables
+        const requiredEnvVars = [
+            'GOOGLE_MEET_LINK',
+            'GOOGLE_EMAIL',
+            'GOOGLE_PASSWORD',
+            'OPENAI_API_KEY'
+        ];
+
+        const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+        if (missingVars.length > 0) {
+            throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`);
+        }
+
+        const botController = new BotController();
         await botController.start();
     } catch (error) {
         console.error('Error in scheduled bot run:', error);
+        throw error;
     }
-}); 
+}
+
+// If running directly (not imported)
+if (import.meta.url === new URL(import.meta.url).href) {
+    handleCronJob().catch(console.error);
+} 
