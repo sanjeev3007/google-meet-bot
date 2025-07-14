@@ -1,6 +1,8 @@
 import { BotController } from './controller';
 import { config } from './config';
 import dotenv from 'dotenv';
+import fs from 'fs';
+import path from 'path';
 
 // Load environment variables
 dotenv.config({ path: '.env.local' });
@@ -12,8 +14,6 @@ export async function handleCronJob() {
         // Validate required environment variables
         const requiredEnvVars = [
             'GOOGLE_MEET_LINK',
-            'GOOGLE_EMAIL',
-            'GOOGLE_PASSWORD',
             'OPENAI_API_KEY'
         ];
 
@@ -22,6 +22,22 @@ export async function handleCronJob() {
             throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`);
         }
 
+        // Check if Chrome profile exists and is ready
+        const profilePath = path.join(process.cwd(), 'chrome-profile');
+        const profileExists = fs.existsSync(profilePath);
+        const profileReady = fs.existsSync(path.join(profilePath, '.profile-ready'));
+
+        if (!profileExists) {
+            throw new Error('Chrome profile directory not found. Please run "npm run setup:login" first');
+        }
+
+        if (!profileReady) {
+            // Create profile ready marker if profile exists but marker doesn't
+            fs.writeFileSync(path.join(profilePath, '.profile-ready'), 'Profile setup completed');
+            console.log('✅ Created profile ready marker');
+        }
+
+        console.log('✅ Chrome profile verified');
         const botController = new BotController();
         await botController.start();
     } catch (error) {

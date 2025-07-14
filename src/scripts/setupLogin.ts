@@ -65,6 +65,8 @@ async function setupLogin() {
         if (isAlreadyLoggedIn) {
             console.log('✅ Already logged in! Profile is working correctly.');
             console.log('📁 Profile location:', userDataDir);
+            // Create profile ready marker
+            fs.writeFileSync(join(userDataDir, '.profile-ready'), 'Profile setup completed');
             return;
         }
         
@@ -92,8 +94,9 @@ async function setupLogin() {
             console.log('📁 Profile saved in:', userDataDir);
             console.log('🤖 The bot can now use this session.');
             
-            // Save a marker file to indicate successful setup
+            // Create profile ready marker
             fs.writeFileSync(join(userDataDir, '.profile-ready'), 'Profile setup completed');
+            console.log('✅ Profile marker created successfully');
         } else {
             console.log('\n❌ Could not verify Google Meet access.');
             console.log('💡 Please ensure you have access to Google Meet and try again.');

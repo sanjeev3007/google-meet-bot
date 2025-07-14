@@ -1,13 +1,11 @@
-import dotenv from 'dotenv';
 import path from 'path';
+import dotenv from 'dotenv';
 
 // Load environment variables
 dotenv.config({ path: '.env.local' });
 
 export interface BotConfig {
     meetUrl: string;
-    email: string;
-    password: string;
     scheduleTime: string;
     audioOutputPath: string;
     edgePath: string;
@@ -21,8 +19,6 @@ const chromeProfilePath = path.join(process.cwd(), 'chrome-profile');
 
 export const config: BotConfig = {
     meetUrl: process.env.GOOGLE_MEET_LINK || '',
-    email: process.env.GOOGLE_EMAIL || '',
-    password: process.env.GOOGLE_PASSWORD || '',
     scheduleTime: process.env.SCHEDULE_TIME || '*/5 * * * *', // Run every 5 minutes
     audioOutputPath: path.join(process.cwd(), 'temp', 'audio'),
     edgePath: process.env.EDGE_PATH || 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
@@ -32,6 +28,6 @@ export const config: BotConfig = {
 };
 
 // Validate config
-if (!config.meetUrl || !config.email || !config.password) {
+if (!config.meetUrl) {
     throw new Error('Missing required environment variables. Please check .env.local file.');
 } 
