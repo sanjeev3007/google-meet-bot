@@ -7,7 +7,7 @@ dotenv.config({ path: '.env.local' });
 async function setupCronJob() {
     try {
         const jobName = 'google_meet_bot';
-        const schedule = '*/5 * * * *'; // Run every 5 minutes
+        const schedule = process.env.SCHEDULE_TIME || '*/15 * * * *'; // Use env var or default to 15 minutes
         
         // Get the webhook URL - prefer VERCEL_URL over NEXT_PUBLIC_APP_URL
         const appUrl = process.env.VERCEL_URL || process.env.NEXT_PUBLIC_APP_URL;
@@ -38,7 +38,7 @@ async function setupCronJob() {
         
         console.log('✅ Cron job setup completed successfully');
         console.log(`ℹ️ Webhook URL: ${webhookUrl}`);
-        console.log('ℹ️ The bot will run every 5 minutes');
+        console.log(`ℹ️ The bot will run according to schedule: ${schedule}`);
     } catch (error) {
         console.error('❌ Error setting up cron job:', error);
         process.exit(1);

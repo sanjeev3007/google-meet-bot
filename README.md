@@ -33,7 +33,7 @@ An automated bot that joins Google Meet calls, records audio, transcribes conver
   
 - **Automation & Browser Control**
   - Puppeteer 24.x
-  - node-cron 4.x
+  - supabase crone 
   
 - **Audio Processing**
   - FFmpeg
@@ -43,6 +43,7 @@ An automated bot that joins Google Meet calls, records audio, transcribes conver
 - **Cloud Services**
   - OpenAI API (for transcription)
   - Supabase (storage & database)
+  - DigitalOcean (bot hosting)
   
 - **Development Tools**
   - tsx (TypeScript execution)
@@ -77,9 +78,11 @@ choco install ffmpeg
 google-meet-bot/
 ├── src/
 │   ├── app/              # Next.js application
-│   │   ├── globals.css   # Global styles
-│   │   ├── layout.tsx    # Root layout
-│   │   └── page.tsx      # Home page
+│   │   ├── api/         # API routes
+│   │   │   └── cron/   # Supabase cron webhook
+│   │   ├── globals.css  # Global styles
+│   │   ├── layout.tsx   # Root layout
+│   │   └── page.tsx     # Home page
 │   ├── bot/             # Bot core functionality
 │   │   ├── controller.ts    # Main bot controller
 │   │   ├── joinMeet.ts     # Meeting join logic
@@ -87,10 +90,13 @@ google-meet-bot/
 │   │   ├── recordAudio.ts   # Audio recording
 │   │   ├── transcribe.ts    # Speech to text
 │   │   ├── saveTranscript.ts # Save transcriptions
-│   │   ├── scheduler.ts     # Meeting scheduler / run file /start bot by this file
+│   │   ├── scheduler.ts     # Meeting scheduler
 │   │   └── config.ts        # Bot configuration
-│   └── lib/             # Shared utilities
-│       └── supabase.ts  # Database client
+│   ├── lib/             # Shared utilities
+│   │   └── supabase.ts  # Database client
+│   └── scripts/         # Setup scripts
+│       ├── setupCron.ts # Supabase cron setup
+│       └── setupLogin.ts # Browser profile setup
 ├── public/             # Static assets
 ├── temp/              # Temporary audio files
 └── package.json       # Dependencies and scripts
@@ -104,6 +110,8 @@ google-meet-bot/
 - Virtual Audio Cable installed
 - Node.js 18 or higher
 - Edge browser installed
+- DigitalOcean account
+- Supabase account
 
 ### 2. Installation
 
@@ -133,9 +141,16 @@ GOOGLE_PASSWORD=your_password
 OPENAI_API_KEY=your_openai_api_key
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_WEBHOOK_SECRET=your_webhook_secret
 
-# Optional: Scheduling (Default: 6:58 PM daily)
-SCHEDULE_TIME=58 18 * * *
+# Required: Schedule Configuration
+SCHEDULE_TIME="*/15 * * * *"  # Cron expression for schedule (default: every 15 minutes)
+# Examples:
+# "*/15 * * * *" - Every 15 minutes
+# "*/30 * * * *" - Every 30 minutes
+# "0 */1 * * *" - Every hour
+# "0 9,14,18 * * *" - At 9 AM, 2 PM, and 6 PM
+# "0 9-17 * * 1-5" - Every hour from 9 AM to 5 PM, Monday to Friday
 
 # Optional: Paths (defaults shown)
 EDGE_PATH=C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe
@@ -150,7 +165,7 @@ AUDIO_DEVICE=audio=CABLE Output
 npm run bot:start
 ```
 
-### Using Docker
+### Using Docker on DigitalOcean
 ```bash
 # Build the image
 docker build -t google-meet-bot .
@@ -164,6 +179,68 @@ docker run -d \
   google-meet-bot
 ```
 
+## 🤖 Bot Architecture
+
+### DigitalOcean Setup
+
+1. **Container Setup**
+- `Dockerfile`: Defines the bot's container environment
+- Installs required dependencies (FFmpeg, Edge browser)
+- Sets up Virtual Audio Cable
+- Configures environment variables
+
+2. **Bot Components**
+- `src/bot/scheduler.ts`: Entry point for bot execution
+- `src/bot/controller.ts`: Main bot logic
+- `src/bot/joinMeet.ts`: Meeting automation
+- `src/bot/recordAudio.ts`: Audio capture
+- `src/bot/transcribe.ts`: OpenAI transcription
+- `src/bot/saveTranscript.ts`: Database storage
+
+### Supabase Cron Integration
+
+1. **Cron Setup**
+- `src/scripts/setupCron.ts`: Creates Supabase cron job
+- Configures 5-minute interval trigger
+- Sets up webhook endpoint
+
+2. **Webhook Handler**
+- `src/app/api/cron/route.ts`: Receives cron triggers
+- Verifies webhook authenticity
+- Starts bot process
+
+3. **Database Integration**
+- `src/lib/supabase.ts`: Database client setup
+- Manages cron job configuration
+- Handles transcript storage
+
+### Workflow
+
+1. **Initial Setup**
+```bash
+# Setup Chrome profile
+npm run setup:login
+
+# Setup Supabase cron
+npm run setup:cron
+```
+
+2. **Deployment**
+```bash
+# Deploy to DigitalOcean
+doctl apps create --spec app.yaml
+
+# Deploy to Vercel (for webhook)
+vercel deploy
+```
+
+3. **Automatic Operation**
+- Supabase cron triggers every 5 minutes
+- Webhook endpoint receives trigger
+- Bot container executes meeting join
+- Audio recording and transcription begin
+- Data stored in Supabase
+
 ## 📝 Key Files
 
 - `src/bot/controller.ts`: Main bot logic and meeting management
@@ -171,10 +248,15 @@ docker run -d \
 - `src/bot/recordAudio.ts`: Audio recording functionality
 - `src/bot/transcribe.ts`: Speech-to-text conversion using OpenAI
 - `src/bot/scheduler.ts`: Meeting scheduling and cron jobs
+- `src/app/api/cron/route.ts`: Supabase webhook handler
+- `src/scripts/setupCron.ts`: Cron job configuration
+- `src/lib/supabase.ts`: Database and cron management
 
 ## 🔧 Available Scripts
 
 - `npm run bot:start`: Start the bot in development mode
+- `npm run setup:login`: Setup Chrome profile for Google login
+- `npm run setup:cron`: Configure Supabase cron job
 - `npm start`: Start the bot in production mode
 - `npm run dev`: Start Next.js development server
 - `npm run build`: Build the Next.js application
