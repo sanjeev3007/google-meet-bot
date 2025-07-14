@@ -44,6 +44,24 @@ export class BotController {
             const { browser, page } = await joinGoogleMeet();
             this.browser = browser;
             this.page = page;
+
+            // Verify we're actually in the meeting
+            const inMeeting = await page.evaluate(() => {
+                const indicators = [
+                    '[data-meeting-title]',
+                    '[aria-label*="meeting"]',
+                    '[aria-label*="call"]',
+                    '[data-call-id]',
+                    'div[jscontroller][data-allocation-index]',
+                    'div[jsname="r4nke"]'
+                ];
+                return indicators.some(selector => document.querySelector(selector) !== null);
+            });
+
+            if (!inMeeting) {
+                throw new Error('Failed to verify meeting join status');
+            }
+
             console.log('✅ Successfully joined the meeting!');
 
             // Start a new meeting session
@@ -54,6 +72,9 @@ export class BotController {
 
             // Start participant check interval
             this.startParticipantCheck();
+
+            // Wait a moment for everything to stabilize
+            await new Promise(resolve => setTimeout(resolve, 5000));
 
             // Start recording and transcription loop
             await this.recordAndTranscribe();

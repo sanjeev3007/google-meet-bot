@@ -1,0 +1,15 @@
+2025/07/14-10:19:40.294 4310 Reusing MANIFEST D:\Desktop\google-meet-bot\chrome-profile\Default\EdgeCoupons/coupons_data.db/MANIFEST-000001
+2025/07/14-10:19:40.301 4310 Recovering log #131
+2025/07/14-10:19:40.431 4310 Reusing old log D:\Desktop\google-meet-bot\chrome-profile\Default\EdgeCoupons/coupons_data.db/000131.log 
+2025/07/14-10:19:41.410 67dc Level-0 table #135: started
+2025/07/14-10:19:41.462 67dc Level-0 table #135: 672035 bytes OK
+2025/07/14-10:19:41.520 67dc Delete type=0 #131
+2025/07/14-10:19:41.521 5fcc Compacting 4@0 + 1@1 files
+2025/07/14-10:19:41.567 5fcc Generated table #136@0: 4 keys, 672035 bytes
+2025/07/14-10:19:41.567 5fcc Compacted 4@0 + 1@1 files => 672035 bytes
+2025/07/14-10:19:41.602 5fcc compacted to: files[ 0 1 1 0 0 0 0 ]
+2025/07/14-10:19:41.604 5fcc Delete type=2 #123
+2025/07/14-10:19:41.604 5fcc Delete type=2 #126
+2025/07/14-10:19:41.604 5fcc Delete type=2 #129
+2025/07/14-10:19:41.604 5fcc Delete type=2 #132
+2025/07/14-10:19:41.604 5fcc Delete type=2 #135

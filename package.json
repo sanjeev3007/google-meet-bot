@@ -3,16 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
- "scripts": {
-  "start": "cross-env NODE_ENV=production tsx src/bot/scheduler.ts",
-  "dev": "next dev",
-  "build": "next build",
-  "lint": "next lint",
-  "bot:start": "cross-env NODE_ENV=development tsx src/bot/scheduler.ts",
-  "bot:build": "cross-env NODE_ENV=development tsx src/bot/scheduler.ts",
-  "setup:cron": "cross-env NODE_ENV=development tsx src/scripts/setupCron.ts"
-},
-
+  "scripts": {
+    "start": "cross-env NODE_ENV=production tsx src/bot/scheduler.ts",
+    "dev": "next dev",
+    "build": "next build",
+    "lint": "next lint",
+    "bot:start": "cross-env NODE_ENV=development tsx src/bot/scheduler.ts",
+    "bot:build": "cross-env NODE_ENV=development tsx src/bot/scheduler.ts",
+    "setup:cron": "cross-env NODE_ENV=development tsx src/scripts/setupCron.ts",
+    "setup:login": "cross-env NODE_ENV=development tsx src/scripts/setupLogin.ts"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.50.0",
     "@types/fluent-ffmpeg": "^2.1.27",
@@ -20,9 +20,10 @@
     "ffmpeg-static": "^5.2.0",
     "fluent-ffmpeg": "^2.1.2",
     "next": "15.3.4",
-    
     "openai": "^4.28.4",
     "puppeteer": "^24.10.2",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
