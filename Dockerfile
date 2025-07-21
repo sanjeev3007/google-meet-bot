@@ -15,6 +15,14 @@ RUN apt-get update && apt-get install -y \
   libxdamage1 \
   libxrandr2 \
   xdg-utils \
+  libnss3 \
+  libxss1 \
+  libgconf-2-4 \
+  libgtk-3-0 \
+  libgbm1 \
+  libpango-1.0-0 \
+  libpangocairo-1.0-0 \
+  libatspi2.0-0 \
   --no-install-recommends && rm -rf /var/lib/apt/lists/*
 
 # Create working directory
