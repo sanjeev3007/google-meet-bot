@@ -21,9 +21,8 @@ export async function checkParticipants(page: Page): Promise<boolean> {
 
 export async function joinGoogleMeet(): Promise<{ browser: Browser, page: Page }> {
     // Launch browser with strict media blocking
-    const browser = await puppeteer.launch({
+    const launchOptions: any = {
         headless: true,
-        executablePath: config.edgePath,
         userDataDir: config.userDataDir,
         defaultViewport: null,
         ignoreDefaultArgs: ['--enable-automation'],
@@ -46,7 +45,21 @@ export async function joinGoogleMeet(): Promise<{ browser: Browser, page: Page }
             '--window-size=1280,800',
             '--start-maximized'
         ]
-    });
+    };
+
+    // In production (like Railway), use the bundled Chromium instead of Edge
+    if (process.env.NODE_ENV === 'production') {
+        // Don't specify executablePath in production - use bundled Chromium
+        console.log("✅ Using bundled Chromium for production environment");
+        // Ensure we're using appropriate settings for Linux environment
+        launchOptions.args.push('--disable-dev-shm-usage');
+    } else {
+        // In development, use the configured browser path
+        launchOptions.executablePath = config.edgePath;
+        console.log(`✅ Using configured browser at: ${config.edgePath}`);
+    }
+
+    const browser = await puppeteer.launch(launchOptions);
 
     try {
         const page = await browser.newPage();
