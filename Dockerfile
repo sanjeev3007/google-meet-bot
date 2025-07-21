@@ -1,6 +1,6 @@
 FROM node:18-slim
 
-# Install Chromium and required dependencies
+# Install Chromium and dependencies
 RUN apt-get update && apt-get install -y \
   wget \
   ca-certificates \
@@ -22,14 +22,10 @@ RUN apt-get update && apt-get install -y \
   --no-install-recommends && \
   rm -rf /var/lib/apt/lists/*
 
-# Set working directory
 WORKDIR /app
 
-# Copy project files
 COPY . .
 
-# Install Node.js dependencies
 RUN npm install
 
-# Start bot
 CMD ["npm", "start"]
