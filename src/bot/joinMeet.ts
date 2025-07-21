@@ -21,32 +21,30 @@ export async function checkParticipants(page: Page): Promise<boolean> {
 
 export async function joinGoogleMeet(): Promise<{ browser: Browser, page: Page }> {
     // Launch browser with strict media blocking
-    const browser = await puppeteer.launch({
-        headless: true,
-        executablePath: config.edgePath,
-        userDataDir: config.userDataDir,
-        defaultViewport: null,
-        ignoreDefaultArgs: ['--enable-automation'],
-        args: [
-            // Disable all media devices
-            '--use-fake-ui-for-media-stream',
-            '--use-fake-device-for-media-stream',
-            '--mute-audio',
-            '--disable-audio-input',
-            '--disable-audio-output',
-            '--disable-webrtc',
-            '--disable-notifications',
-            // Block media permissions
-            '--deny-permission-prompts',
-            '--disable-permissions-api',
-            // General settings
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-infobars',
-            '--window-size=1280,800',
-            '--start-maximized'
-        ]
-    });
+   const browser = await puppeteer.launch({
+    headless: true,
+    executablePath: '/usr/bin/chromium',
+    userDataDir: config.userDataDir,
+    defaultViewport: null,
+    ignoreDefaultArgs: ['--enable-automation'],
+    args: [
+        '--use-fake-ui-for-media-stream',
+        '--use-fake-device-for-media-stream',
+        '--mute-audio',
+        '--disable-audio-input',
+        '--disable-audio-output',
+        '--disable-webrtc',
+        '--disable-notifications',
+        '--deny-permission-prompts',
+        '--disable-permissions-api',
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-infobars',
+        '--window-size=1280,800',
+        '--start-maximized'
+    ]
+});
+
 
     try {
         const page = await browser.newPage();
