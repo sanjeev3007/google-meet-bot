@@ -1,8 +1,7 @@
 FROM node:18-slim
 
-# Install Chromium and dependencies
+# Install Puppeteer dependencies only (NOT Chromium!)
 RUN apt-get update && apt-get install -y \
-  wget \
   ca-certificates \
   fonts-liberation \
   libappindicator3-1 \
@@ -18,9 +17,8 @@ RUN apt-get update && apt-get install -y \
   libnss3 \
   libxss1 \
   libglib2.0-0 \
-  chromium \
   --no-install-recommends && \
-  rm -rf /var/lib/apt/lists/*
+  apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
