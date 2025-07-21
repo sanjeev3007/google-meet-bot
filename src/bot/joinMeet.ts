@@ -1,6 +1,7 @@
 import puppeteer, { Browser, Page } from "puppeteer";
 import { config } from "./config";
 
+
 export async function checkParticipants(page: Page): Promise<boolean> {
     try {
         const hasParticipants = await page.evaluate(() => {
