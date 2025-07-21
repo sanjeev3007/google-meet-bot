@@ -21,6 +21,7 @@ export async function checkParticipants(page: Page): Promise<boolean> {
 
 const browser = await puppeteer.launch({
   headless: true,
+  executablePath: config.edgePath,
   userDataDir: config.userDataDir,
   defaultViewport: null,
   ignoreDefaultArgs: ['--enable-automation'],
