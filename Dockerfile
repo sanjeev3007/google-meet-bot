@@ -1,6 +1,6 @@
 FROM node:18-slim
 
-# Install dependencies for Chromium
+# Install Chromium and required dependencies
 RUN apt-get update && apt-get install -y \
   wget \
   ca-certificates \
@@ -15,15 +15,20 @@ RUN apt-get update && apt-get install -y \
   libxdamage1 \
   libxrandr2 \
   xdg-utils \
-  --no-install-recommends && rm -rf /var/lib/apt/lists/*
+  libnss3 \
+  libxss1 \
+  libglib2.0-0 \
+  chromium \
+  --no-install-recommends && \
+  rm -rf /var/lib/apt/lists/*
 
-# Create working directory
+# Set working directory
 WORKDIR /app
 
-# Copy files
+# Copy project files
 COPY . .
 
-# Install dependencies
+# Install Node.js dependencies
 RUN npm install
 
 # Start bot
