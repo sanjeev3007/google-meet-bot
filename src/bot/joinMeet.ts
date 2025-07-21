@@ -23,7 +23,9 @@ export async function checkParticipants(page: Page): Promise<boolean> {
 export async function joinGoogleMeet(): Promise<{ browser: Browser, page: Page }> {
     // Launch browser with strict media blocking
     const launchOptions: any = {
-        headless: true,
+        //headless: true,
+        headless: 'new',
+        slowMo: 50, 
         userDataDir: config.userDataDir,
         defaultViewport: null,
         ignoreDefaultArgs: ['--enable-automation'],

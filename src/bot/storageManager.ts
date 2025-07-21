@@ -15,12 +15,12 @@ export class StorageManager {
             const { data: buckets, error } = await supabase.storage.listBuckets();
             if (error) throw error;
 
-            const exists = buckets?.some(b => b.name === this.bucketName);
-            if (!exists) {
-                console.warn(`Bucket "${this.bucketName}" does not exist. Please create it manually in Supabase.`);
-            } else {
-                console.log('✅ Audio bucket found.');
-            }
+            // const exists = buckets?.some(b => b.name === this.bucketName);
+            // if (!exists) {
+            //     console.warn(`Bucket "${this.bucketName}" does not exist. Please create it manually in Supabase.`);
+            // } else {
+            //     console.log('✅ Audio bucket found.');
+            // }
         } catch (error) {
             console.error('❌ Error checking bucket existence:', error);
         }
