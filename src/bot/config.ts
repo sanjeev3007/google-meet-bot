@@ -36,4 +36,12 @@ if (!config.meetUrl) {
 const cronRegex = /^(\*|([0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])|\*\/([0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])) (\*|([0-9]|1[0-9]|2[0-3])|\*\/([0-9]|1[0-9]|2[0-3])) (\*|([1-9]|1[0-9]|2[0-9]|3[0-1])|\*\/([1-9]|1[0-9]|2[0-9]|3[0-1])) (\*|([1-9]|1[0-2])|\*\/([1-9]|1[0-2])) (\*|([0-6])|\*\/([0-6]))$/;
 if (!cronRegex.test(config.scheduleTime)) {
     throw new Error('Invalid SCHEDULE_TIME format. Must be a valid cron expression (e.g., "*/15 * * * *" for every 15 minutes)');
-} 
+}
+
+// Log configuration for debugging
+console.log('\n📝 Bot Configuration:');
+console.log('- Environment:', process.env.NODE_ENV);
+console.log('- Chrome Profile:', config.userDataDir);
+console.log('- Audio Output:', config.audioOutputPath);
+console.log('- Audio Device:', config.audioDevice);
+console.log('- Meet URL:', config.meetUrl); 

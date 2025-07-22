@@ -1,6 +1,6 @@
-2025/07/21-19:42:25.706 1858 Reusing MANIFEST D:\Desktop\google-meet-bot\chrome-profile\Default\EdgeCoupons/coupons_data.db/MANIFEST-000001
-2025/07/21-19:42:25.708 1858 Recovering log #177
-2025/07/21-19:42:25.741 1858 Reusing old log D:\Desktop\google-meet-bot\chrome-profile\Default\EdgeCoupons/coupons_data.db/000177.log 
-2025/07/21-19:42:28.766 5b6c Level-0 table #181: started
-2025/07/21-19:42:28.822 5b6c Level-0 table #181: 672012 bytes OK
-2025/07/21-19:42:28.916 5b6c Delete type=0 #177
+2025/07/22-11:26:18.538 7c9c Reusing MANIFEST D:\Desktop\google-meet-bot\chrome-profile\Default\EdgeCoupons/coupons_data.db/MANIFEST-000001
+2025/07/22-11:26:18.591 7c9c Recovering log #190
+2025/07/22-11:26:18.658 7c9c Reusing old log D:\Desktop\google-meet-bot\chrome-profile\Default\EdgeCoupons/coupons_data.db/000190.log 
+2025/07/22-11:26:20.780 828c Level-0 table #194: started
+2025/07/22-11:26:20.837 828c Level-0 table #194: 672012 bytes OK
+2025/07/22-11:26:20.888 828c Delete type=0 #190
